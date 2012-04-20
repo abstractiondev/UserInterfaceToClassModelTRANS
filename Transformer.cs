@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using ClassModel_v1_0;
 using UserInterface_v1_0;
 using ClassesType = ClassModel_v1_0.ClassesType;
 using ClassType = ClassModel_v1_0.ClassType;
@@ -55,8 +56,10 @@ namespace UserInterfaceToClassModelTRANS
 
         public static CM.ClassModelAbstractionType TransformAbstraction(UI.UserInterfaceAbstractionType fromAbs)
         {
-            CM.ClassModelAbstractionType toAbs = null;
-            toAbs.Classes = ToClasses(fromAbs.UserInterfaces);
+            CM.ClassModelAbstractionType toAbs = new ClassModelAbstractionType
+                                                     {
+                                                         Classes = ToClasses(fromAbs.UserInterfaces)
+                                                     };
             return toAbs;
         }
 
