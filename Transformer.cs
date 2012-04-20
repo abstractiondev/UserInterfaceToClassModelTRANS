@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using UserInterface_v1_0;
+using ClassesType = ClassModel_v1_0.ClassesType;
+using ClassType = ClassModel_v1_0.ClassType;
 using CM=ClassModel_v1_0;
 using UI=UserInterface_v1_0;
 
@@ -53,8 +56,39 @@ namespace UserInterfaceToClassModelTRANS
         public static CM.ClassModelAbstractionType TransformAbstraction(UI.UserInterfaceAbstractionType fromAbs)
         {
             CM.ClassModelAbstractionType toAbs = null;
+            toAbs.Classes = ToClasses(fromAbs.UserInterfaces);
             return toAbs;
         }
 
+        private static ClassesType[] ToClasses(UserInterfaceType[] userInterfaces)
+        {
+            var result = userInterfaces.Select(ui => new ClassesType
+                                                   {
+                                                       Class =
+                                                           ui.SemanticModel.Select(ToClassModelClass)
+                                                           .ToArray(),
+                                                       namespaceName = ui.domainName + "." + ui.name
+                                                   }).ToArray();
+            return result;
+        }
+
+        private static CM.ClassType ToClassModelClass(UI.ClassType uiClass)
+        {
+            return new CM.ClassType
+                       {
+                           designDesc = uiClass.designDesc,
+                           name = uiClass.name,
+                           Properties = uiClass.Properties.Select(ToClassModelProperty).ToArray()
+                       };
+        }
+
+        private static CM.PropertyType ToClassModelProperty(UI.PropertyType prop)
+        {
+            return new CM.PropertyType
+                       {
+                           name = prop.name,
+                           dataType = prop.dataType
+                       };
+        }
     }
 }
